@@ -34,6 +34,7 @@ Anyone running a Home Assistant dashboard on hardware that struggles with it. Fo
 - **Raspberry Pi touchscreens** running a Chromium kiosk (Pi 3, Pi Zero 2 W, older Pi 4s)
 - **Echo Show / Lenovo smart displays** running a browser or Fully Kiosk
 - **Old phones** used as room remotes
+- The **Home Assistant app from F-Droid** (the "minimal" Companion build without Google services), common on de-Googled and budget Android panels
 - Anything shown through **Fully Kiosk Browser, WallPanel, View Assist / VACA, or the Home Assistant Companion app** on a modest device
 
 The more custom cards you have installed and the more entities your home has, the bigger the difference.
@@ -104,6 +105,17 @@ If working out the trimmed list fails for any reason, the full list is sent and 
 ## Contributing
 
 Issues and pull requests are welcome. Please include your Home Assistant version and the output of `lite_resources.preview`.
+
+## Releasing
+
+Create the GitHub release after the Validate workflow on that commit has succeeded.
+
+1. Set `version` in `custom_components/lite_resources/manifest.json` to the new version, and add that version to `CHANGELOG.md`.
+2. Merge the change to `main`.
+3. Wait until the Validate workflow on that commit succeeds. The hassfest job and the HACS job both have to pass. `.github/workflows/validate.yaml` does not set `ignore`.
+4. Create a GitHub release of that commit. Name it `v` plus the manifest version (for example `v0.2.0`; the release history includes `v0.1.2`) and target `main`.
+
+A submission to the HACS default repository asks for that release to be created after those actions have succeeded, and for links to the release and to the successful runs. v0.1.1 was published at 2026-11-07 11:39:18 GMT. Validate run [42369085242](https://github.com/evski/ha-lite-resources/actions/runs/42369085242) on the same commit finished hassfest at 11:39:40 GMT and HACS validation at 11:39:57 GMT.
 
 ## License
 
