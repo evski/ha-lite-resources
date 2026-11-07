@@ -11,6 +11,8 @@ from homeassistant.config_entries import ConfigEntry, ConfigFlow, ConfigFlowResu
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.selector import (
     BooleanSelector,
+    EntitySelector,
+    EntitySelectorConfig,
     SelectOptionDict,
     SelectSelector,
     SelectSelectorConfig,
@@ -20,6 +22,8 @@ from homeassistant.helpers.selector import (
 from .const import (
     CONF_ALWAYS_INCLUDE,
     CONF_DASHBOARDS,
+    CONF_EXTRA_ENTITIES,
+    CONF_FILTER_STATES,
     CONF_INCLUDE_UNSCANNABLE,
     CONF_USERS,
     DEFAULT_DASHBOARD,
@@ -68,6 +72,12 @@ async def _async_schema(hass: HomeAssistant, current: dict[str, Any]) -> vol.Sch
                 CONF_INCLUDE_UNSCANNABLE,
                 default=current.get(CONF_INCLUDE_UNSCANNABLE, True),
             ): BooleanSelector(),
+            vol.Required(
+                CONF_FILTER_STATES, default=current.get(CONF_FILTER_STATES, False)
+            ): BooleanSelector(),
+            vol.Optional(
+                CONF_EXTRA_ENTITIES, default=current.get(CONF_EXTRA_ENTITIES, [])
+            ): EntitySelector(EntitySelectorConfig(multiple=True)),
         }
     )
 

@@ -6,6 +6,14 @@ CONF_USERS = "users"
 CONF_DASHBOARDS = "dashboards"
 CONF_ALWAYS_INCLUDE = "always_include"
 CONF_INCLUDE_UNSCANNABLE = "include_unscannable"
+CONF_FILTER_STATES = "filter_states"
+CONF_EXTRA_ENTITIES = "extra_entities"
+
+# The websocket command the frontend uses to stream entity states.
+WS_SUBSCRIBE_ENTITIES = "subscribe_entities"
+
+# Always sent when filtering states: the frontend uses these outside any card.
+BASE_ENTITIES = ("sun.sun", "zone.home")
 
 # Value used in the dashboards selector for the default (Overview) dashboard,
 # whose url_path is None.

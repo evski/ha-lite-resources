@@ -16,8 +16,10 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 
 from .const import (
+    BASE_ENTITIES,
     CONF_ALWAYS_INCLUDE,
     CONF_DASHBOARDS,
+    CONF_EXTRA_ENTITIES,
     CONF_INCLUDE_UNSCANNABLE,
     DEFAULT_DASHBOARD,
     KEY_HINTS,
@@ -122,6 +124,41 @@ async def _async_dashboard_text(hass: HomeAssistant, key: str) -> str | None:
     except HomeAssistantError:  # includes ConfigNotFound (empty/auto dashboard)
         return None
     return json.dumps(config)
+
+
+async def async_dashboard_entities(
+    hass: HomeAssistant, options: dict[str, Any]
+) -> set[str]:
+    """Return every entity the configured dashboards can show.
+
+    Any existing entity id that appears anywhere in the dashboards' JSON (cards, pop-ups,
+    conditions, actions), the members of any groups among them, the configured extras,
+    and a few the frontend uses itself.
+    """
+    domains = {state.domain for state in hass.states.async_all()}
+    if not domains:
+        return set()
+    pattern = re.compile(
+        r"(?<![\w.])(?:"
+        + "|".join(sorted(map(re.escape, domains), key=len, reverse=True))
+        + r")\.[a-z0-9_]+"
+    )
+    found: set[str] = set(BASE_ENTITIES) | set(options.get(CONF_EXTRA_ENTITIES, []))
+    for key in options.get(CONF_DASHBOARDS, []):
+        text = await _async_dashboard_text(hass, key)
+        if text:
+            found.update(pattern.findall(text))
+    # add group members (light groups, old-style groups, ...), recursively
+    todo = list(found)
+    while todo:
+        state = hass.states.get(todo.pop())
+        members = state.attributes.get("entity_id") if state else None
+        if isinstance(members, (list, tuple)):
+            for member in members:
+                if isinstance(member, str) and member not in found:
+                    found.add(member)
+                    todo.append(member)
+    return {e for e in found if hass.states.get(e) is not None}
 
 
 async def async_resolve(
