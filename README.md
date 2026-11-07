@@ -43,5 +43,16 @@ Reload the panel after saving.
 - If a light user opens a dashboard that isn't in their list, cards from skipped resources won't load. Add the dashboard and reload.
 - Admin pages that list resources show the filtered list to light users.
 
+## Releasing
+
+Create the GitHub release after the Validate workflow on that commit has succeeded.
+
+1. Set `version` in `custom_components/lite_resources/manifest.json` to the new version, and add that version to `CHANGELOG.md`.
+2. Merge the change to `main`.
+3. Wait until the Validate workflow on that commit succeeds. The hassfest job and the HACS job both have to pass. `.github/workflows/validate.yaml` does not set `ignore`.
+4. Create a GitHub release of that commit. Name it `v` plus the manifest version (for this patch, `v0.1.2`) and target `main`.
+
+A submission to the HACS default repository asks for that release to be created after those actions have succeeded, and for links to the release and to the successful runs. v0.1.1 was published at 2026-11-07 11:39:18 GMT. Validate run [42369085242](https://github.com/evski/ha-lite-resources/actions/runs/42369085242) on the same commit finished hassfest at 11:39:40 GMT and HACS validation at 11:39:57 GMT.
+
 ## License
 MIT
