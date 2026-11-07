@@ -129,7 +129,8 @@ async def async_resolve(
 ) -> Resolution:
     """Split the resources into those the configured dashboards need and the rest."""
     result = Resolution(dashboards=list(options.get(CONF_DASHBOARDS, [])))
-    always = set(options.get(CONF_ALWAYS_INCLUDE, []))
+    # Match on the path only: the query string carries a version that changes on updates.
+    always = {urlsplit(u).path for u in options.get(CONF_ALWAYS_INCLUDE, [])}
     include_unscannable = options.get(CONF_INCLUDE_UNSCANNABLE, True)
 
     needed: set[str] = set()
@@ -145,7 +146,7 @@ async def async_resolve(
     provided: set[str] = set()
     for item in await async_all_resources(hass):
         url = item.get("url", "")
-        if url in always or item.get("type") == "css":
+        if urlsplit(url).path in always or item.get("type") == "css":
             result.included.append(item)
             continue
         path = url_to_path(hass, url)
