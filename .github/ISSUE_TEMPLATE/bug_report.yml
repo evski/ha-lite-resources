@@ -1,0 +1,38 @@
+name: Bug report
+description: Something doesn't load or update on a light device
+labels: [bug]
+body:
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant version
+    validations:
+      required: true
+  - type: input
+    id: lr_version
+    attributes:
+      label: Lite Resources version
+    validations:
+      required: true
+  - type: input
+    id: device
+    attributes:
+      label: Device and app/browser
+      placeholder: e.g. NSPanel Pro Gen 2 + VACA, Fire HD 8 + Fully Kiosk
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: preview
+    attributes:
+      label: Output of the lite_resources.preview action
+      description: Developer tools → Actions → lite_resources.preview → copy the response.
+      render: yaml
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log lines
+      render: text
