@@ -1,0 +1,14 @@
+{
+  "domain": "lite_resources",
+  "name": "Lite Resources",
+  "codeowners": ["@evski"],
+  "config_flow": true,
+  "dependencies": ["lovelace"],
+  "documentation": "https://github.com/evski/ha-lite-resources",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/evski/ha-lite-resources/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}

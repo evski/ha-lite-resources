@@ -1,0 +1,50 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Lite Resources",
+        "description": "Choose the users (for example a wall panel's login) that should load only the custom cards their dashboards use. Everyone else keeps loading all resources.",
+        "data": {
+          "users": "Light users",
+          "dashboards": "Their dashboards",
+          "always_include": "Always include",
+          "include_unscannable": "Include resources that can't be checked"
+        },
+        "data_description": {
+          "users": "These users get the reduced resource list on every device they log in on.",
+          "dashboards": "Every dashboard these users open. Resources their cards need are loaded; the rest are skipped.",
+          "always_include": "Resources to load regardless, e.g. a mod used by a theme.",
+          "include_unscannable": "Resources served by integrations or other sites can't be read; keep them loaded (recommended)."
+        }
+      }
+    },
+    "abort": {
+      "single_instance_allowed": "Lite Resources is already set up."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Lite Resources",
+        "data": {
+          "users": "Light users",
+          "dashboards": "Their dashboards",
+          "always_include": "Always include",
+          "include_unscannable": "Include resources that can't be checked"
+        },
+        "data_description": {
+          "users": "These users get the reduced resource list on every device they log in on.",
+          "dashboards": "Every dashboard these users open. Resources their cards need are loaded; the rest are skipped.",
+          "always_include": "Resources to load regardless, e.g. a mod used by a theme.",
+          "include_unscannable": "Resources served by integrations or other sites can't be read; keep them loaded (recommended)."
+        }
+      }
+    }
+  },
+  "services": {
+    "preview": {
+      "name": "Preview",
+      "description": "Show which resources the light users get, which are skipped, and any card types no local resource was found for."
+    }
+  }
+}
