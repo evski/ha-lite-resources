@@ -1,0 +1,10 @@
+# Monthly, grouped: one PR per ecosystem instead of one per package (9 Nov 2026)
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
