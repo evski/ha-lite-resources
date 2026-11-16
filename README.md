@@ -47,7 +47,7 @@ If you use [View Assist](https://github.com/dinki/View-Assist) with the **View A
 
 Nothing is changed on disk and nothing is patched in the frontend. Lite Resources answers two of the frontend's own requests differently for the users you choose:
 
-1. **Resources** - the frontend asks once per page load for the list of dashboard resources (`lovelace/resources`). Light users get only the resources their dashboards use. Lite Resources reads those dashboards, collects every `custom:` card type (including cards inside pop-ups, stacks, conditional cards and features), and finds which resource files define them. Mods with no card type are detected from dashboard keys (`card_mod` → card-mod, `kiosk_mode` → kiosk-mode).
+1. **Resources** - the frontend asks once per page load for the list of dashboard resources (`lovelace/resources`). Light users get only the resources their dashboards use. Lite Resources reads every dashboard you select (including one nothing links to), collects every `custom:` card type in that config (stacks, sections, conditional cards, pop-ups and features), and finds which resource files register them. A bundle that builds its element names in code is recognised too (`mushroom.js` provides `custom:mushroom-*-card`). A file is matched by its whole name, so `dreame-vacuum-card.js` is not treated as the Mushroom vacuum card and `lock-manager.js` is not treated as the Mushroom lock card. Mods with no card type are detected from dashboard keys (`card_mod` → card-mod, `kiosk_mode` → kiosk-mode).
 2. **States** (optional) - the frontend subscribes to every entity's state (`subscribe_entities`). Light users' subscription is narrowed to the entities that appear anywhere in their dashboards (cards, pop-ups, conditions, actions), plus members of any groups, plus anything you add yourself.
 
 Everyone else gets Home Assistant's normal behaviour. Remove the integration and everything is exactly as before.
@@ -75,7 +75,7 @@ Or **Settings → Devices & services → Add integration → Lite Resources**.
 | **Light users** | The user(s) your panels log in as. Give each panel its own Home Assistant user if it doesn't have one. |
 | **Their dashboards** | Every dashboard those users open. |
 | **Always include** | Resources to load regardless (e.g. a mod your theme relies on). |
-| **Include resources that can't be checked** | Resources served by integrations (e.g. `/browser_mod.js`, `/webrtc/...`) can't be read. On = always load them (safe default). Off = skip them unless listed under *Always include*. |
+| **Include resources that can't be checked** | Resources served by integrations (e.g. `/browser_mod.js`, `/webrtc/...`) can't be read. On = load them (safe default). Off = skip them unless listed under *Always include*. A file whose name is a card these dashboards don't use, such as `dreame-vacuum-card.js`, is skipped either way. |
 | **Only send states their dashboards show** | Turn on for the biggest speed-up on slow devices. |
 | **Extra entities** | Entities to keep streaming even though they aren't on the dashboards. |
 
