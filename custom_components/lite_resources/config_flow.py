@@ -20,6 +20,7 @@ from homeassistant.helpers.selector import (
 )
 
 from .const import (
+    CONF_ALWAYS_EXCLUDE,
     CONF_ALWAYS_INCLUDE,
     CONF_DASHBOARDS,
     CONF_EXTRA_ENTITIES,
@@ -67,6 +68,9 @@ async def _async_schema(hass: HomeAssistant, current: dict[str, Any]) -> vol.Sch
             ): _multi(dashboards),
             vol.Optional(
                 CONF_ALWAYS_INCLUDE, default=current.get(CONF_ALWAYS_INCLUDE, [])
+            ): _multi(resources),
+            vol.Optional(
+                CONF_ALWAYS_EXCLUDE, default=current.get(CONF_ALWAYS_EXCLUDE, [])
             ): _multi(resources),
             vol.Required(
                 CONF_INCLUDE_UNSCANNABLE,

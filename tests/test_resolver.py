@@ -67,6 +67,7 @@ def _load(module_name: str, filename: str):
 _const = _load("lite_resources.const", "const.py")
 _resolver = _load("lite_resources.resolver", "resolver.py")
 
+CONF_ALWAYS_EXCLUDE = _const.CONF_ALWAYS_EXCLUDE
 CONF_ALWAYS_INCLUDE = _const.CONF_ALWAYS_INCLUDE
 CONF_DASHBOARDS = _const.CONF_DASHBOARDS
 CONF_INCLUDE_UNSCANNABLE = _const.CONF_INCLUDE_UNSCANNABLE
@@ -467,6 +468,48 @@ class ResolveResourcesTest(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn(
             "/hacsfiles/lovelace-mushroom/mushroom.js", summary["included"]
         )
+
+    async def test_always_exclude_drops_a_generic_integration_script(self) -> None:
+        """Always exclude removes a resource the matcher would otherwise send."""
+        summary = await self._resolve(
+            **{
+                CONF_ALWAYS_EXCLUDE: ["/dreame_vacuum/frontend.js?v=old"],
+                CONF_ALWAYS_INCLUDE: ["/dreame_vacuum/frontend.js"],
+            }
+        )
+        self.assertIn("/dreame_vacuum/frontend.js?v=abc123", summary["excluded"])
+        self.assertNotIn("/dreame_vacuum/frontend.js?v=abc123", summary["included"])
+        self.assertIn("/hacsfiles/lovelace-mushroom/mushroom.js", summary["included"])
+
+    async def test_always_exclude_can_drop_a_card_the_dashboard_uses(self) -> None:
+        """Excluding mushroom.js leaves its card types unresolved."""
+        summary = await self._resolve(
+            **{
+                CONF_DASHBOARDS: ["hidden"],
+                CONF_INCLUDE_UNSCANNABLE: False,
+                CONF_ALWAYS_EXCLUDE: ["/hacsfiles/lovelace-mushroom/mushroom.js"],
+            }
+        )
+        self.assertNotIn(
+            "/hacsfiles/lovelace-mushroom/mushroom.js", summary["included"]
+        )
+        # cards.js is the same bundle under another name, so the types are met.
+        self.assertIn("/hacsfiles/lovelace-mushroom/cards.js", summary["included"])
+        self.assertNotIn("mushroom-light-card", summary["unresolved_types"])
+
+        summary = await self._resolve(
+            **{
+                CONF_DASHBOARDS: ["hidden"],
+                CONF_INCLUDE_UNSCANNABLE: False,
+                CONF_ALWAYS_EXCLUDE: [
+                    "/hacsfiles/lovelace-mushroom/mushroom.js",
+                    "/hacsfiles/lovelace-mushroom/cards.js?v=2",
+                ],
+            }
+        )
+        self.assertNotIn("/hacsfiles/lovelace-mushroom/cards.js", summary["included"])
+        self.assertIn("mushroom-light-card", summary["unresolved_types"])
+        self.assertIn("mushroom-lock-card", summary["unresolved_types"])
 
     async def test_always_include_ignores_the_version_query(self) -> None:
         """Always include matches the path, not the ?v= cache buster."""

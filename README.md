@@ -75,6 +75,7 @@ Or **Settings → Devices & services → Add integration → Lite Resources**.
 | **Light users** | The user(s) your panels log in as. Give each panel its own Home Assistant user if it doesn't have one. |
 | **Their dashboards** | Every dashboard those users open. |
 | **Always include** | Resources to load regardless (e.g. a mod your theme relies on). |
+| **Always exclude** | Resources to never load, even if a card seems to need them. Use this for an integration script with a generic name, such as `/dreame_vacuum/frontend.js`, that these dashboards don't use. It wins over *Always include*. |
 | **Include resources that can't be checked** | Resources served by integrations (e.g. `/browser_mod.js`, `/webrtc/...`) can't be read. On = load them (safe default). Off = skip them unless listed under *Always include*. A file whose name is a card these dashboards don't use, such as `dreame-vacuum-card.js`, is skipped either way. |
 | **Only send states their dashboards show** | Turn on for the biggest speed-up on slow devices. |
 | **Extra entities** | Entities to keep streaming even though they aren't on the dashboards. |
@@ -94,7 +95,7 @@ Home Assistant's frontend is designed so any screen can show anything instantly 
 Per user. If you log in as a light user on your phone, you get the light behaviour there too - so give panels their own user.
 
 **Something shows "unavailable" or a card fails to load on the panel.**
-With state filtering on, entities not on the panel's dashboards aren't sent - add them under *Extra entities*, or add the dashboard. For a card that fails to load, run `lite_resources.preview` and add its resource under *Always include*.
+With state filtering on, entities not on the panel's dashboards aren't sent - add them under *Extra entities*, or add the dashboard. For a card that fails to load, run `lite_resources.preview` and add its resource under *Always include*. To stop a resource the panel never uses, add it under *Always exclude*.
 
 **Does it affect voice assistants, automations, history or the companion app's sensors?**
 No. Only the dashboard's resource list and its live state subscription are changed, and only for light users.

@@ -17,6 +17,7 @@ from homeassistant.exceptions import HomeAssistantError
 
 from .const import (
     BASE_ENTITIES,
+    CONF_ALWAYS_EXCLUDE,
     CONF_ALWAYS_INCLUDE,
     CONF_DASHBOARDS,
     CONF_EXTRA_ENTITIES,
@@ -305,6 +306,8 @@ async def async_resolve(
     result = Resolution(dashboards=list(options.get(CONF_DASHBOARDS, [])))
     # Match on the path only: the query string carries a version that changes on updates.
     always = {urlsplit(u).path for u in options.get(CONF_ALWAYS_INCLUDE, [])}
+    # Explicit exclusion wins, including over Always include and a real card match.
+    excluded_paths = {urlsplit(u).path for u in options.get(CONF_ALWAYS_EXCLUDE, [])}
     include_unscannable = options.get(CONF_INCLUDE_UNSCANNABLE, True)
 
     needed: set[str] = set()
@@ -320,6 +323,9 @@ async def async_resolve(
     provided: set[str] = set()
     for item in await async_all_resources(hass):
         url = item.get("url", "")
+        if urlsplit(url).path in excluded_paths:
+            result.excluded.append(item)
+            continue
         if urlsplit(url).path in always or item.get("type") == "css":
             result.included.append(item)
             continue
